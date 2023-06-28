@@ -19,13 +19,22 @@ type Musics interface {
 	Update(ctx context.Context, id int64, inp domain.UpdateMusicInput) error
 }
 
-type Handler struct {
-	musicsService Musics
+type User interface {
+	SignUp(ctx context.Context, inp domain.SignUpInput) error
+	SignIn(ctx context.Context, inp domain.SignInInput) (string, string, error)
+	ParseToken(ctx context.Context, accessToken string) (int64, error)
+	RefreshTokens(ctx context.Context, refreshToken string) (string, string, error)
 }
 
-func NewHandler(musics Musics) *Handler {
+type Handler struct {
+	musicsService Musics
+	usersService  User
+}
+
+func NewHandler(musics Musics, users User) *Handler {
 	return &Handler{
 		musicsService: musics,
+		usersService:  users,
 	}
 }
 
@@ -33,8 +42,17 @@ func (h *Handler) InitRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.Use(loggingMiddleware)
 
+	auth := r.PathPrefix("/auth").Subrouter()
+	{
+		auth.HandleFunc("/sign-up", h.signUp).Methods(http.MethodPost)
+		auth.HandleFunc("/sign-in", h.signIn).Methods(http.MethodGet)
+		auth.HandleFunc("/refresh", h.refresh).Methods(http.MethodGet)
+	}
+
 	musics := r.PathPrefix("/musics").Subrouter()
 	{
+		musics.Use(h.authMiddleware)
+
 		musics.HandleFunc("", h.createMusic).Methods(http.MethodPost)
 		musics.HandleFunc("", h.getAllMusics).Methods(http.MethodGet)
 		musics.HandleFunc("/{id:[0-9]+}", h.getMusicById).Methods(http.MethodGet)

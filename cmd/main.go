@@ -13,6 +13,7 @@ import (
 	"github.com/dmytrodemianchuk/crud-app/internal/service"
 	"github.com/dmytrodemianchuk/crud-app/internal/transport/rest"
 	"github.com/dmytrodemianchuk/crud-app/pkg/database"
+	"github.com/dmytrodemianchuk/crud-app/pkg/hash"
 )
 
 const (
@@ -47,14 +48,21 @@ func main() {
 	defer db.Close()
 
 	// init deps
+	hasher := hash.NewSHA1Hasher("salt")
+
 	musicsRepo := psql.NewMusics(db)
 	musicsService := service.NewMusics(musicsRepo)
-	handlers := rest.NewHandler(musicsService)
+
+	usersRepo := psql.NewUsers(db)
+	tokensRepo := psql.NewTokens(db)
+	usersService := service.NewUsers(usersRepo, tokensRepo, hasher, []byte("sample secret"))
+
+	handler := rest.NewHandler(musicsService, usersService)
 
 	// init & run server
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Server.Port),
-		Handler: handlers.InitRouter(),
+		Handler: handler.InitRouter(),
 	}
 
 	log.Info("SERVER STARTED")

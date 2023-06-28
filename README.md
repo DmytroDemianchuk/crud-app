@@ -38,8 +38,8 @@ Start application
 ```
 source .env && go build -o app cmd/main.go && ./app
 ```
-
-### Example of creating a music
+### API
+## Example of creating a music
 ```
 {
     "name": "Good Morning",  
