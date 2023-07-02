@@ -11,6 +11,7 @@ import (
 	"github.com/dmytrodemianchuk/crud-app/internal/config"
 	"github.com/dmytrodemianchuk/crud-app/internal/repository/psql"
 	"github.com/dmytrodemianchuk/crud-app/internal/service"
+	grpc_client "github.com/dmytrodemianchuk/crud-app/internal/transport/grpc"
 	"github.com/dmytrodemianchuk/crud-app/internal/transport/rest"
 	"github.com/dmytrodemianchuk/crud-app/pkg/database"
 	"github.com/dmytrodemianchuk/crud-app/pkg/hash"
@@ -55,7 +56,13 @@ func main() {
 
 	usersRepo := psql.NewUsers(db)
 	tokensRepo := psql.NewTokens(db)
-	usersService := service.NewUsers(usersRepo, tokensRepo, hasher, []byte("sample secret"))
+
+	auditClient, err := grpc_client.NewClient(9000)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	usersService := service.NewUsers(usersRepo, tokensRepo, auditClient, hasher, []byte("sample secret"))
 
 	handler := rest.NewHandler(musicsService, usersService)
 

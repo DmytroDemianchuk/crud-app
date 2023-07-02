@@ -22,5 +22,5 @@ CREATE TABLE refresh_tokens
     id serial not null unique,
     user_id varchar(255) not null,
     token varchar(255) not null,
-    expires_at varchar(255) not null
+    expires_at timestamptz not null
 );

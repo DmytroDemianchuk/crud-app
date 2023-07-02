@@ -60,7 +60,7 @@ func (h *Handler) InitRouter() *mux.Router {
 		musics.HandleFunc("/{id:[0-9]+}", h.updateMusic).Methods(http.MethodPut)
 	}
 
-	return r
+	return r	
 
 }
 
