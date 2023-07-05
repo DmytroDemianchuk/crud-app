@@ -11,6 +11,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//go:generate mockgen -source=handler.go -destination=mocks/mock.go
+
 type Musics interface {
 	Create(ctx context.Context, music domain.Music) error
 	GetById(ctx context.Context, id int64) (domain.Music, error)
@@ -60,7 +62,7 @@ func (h *Handler) InitRouter() *mux.Router {
 		musics.HandleFunc("/{id:[0-9]+}", h.updateMusic).Methods(http.MethodPut)
 	}
 
-	return r	
+	return r
 
 }
 
