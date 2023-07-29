@@ -71,9 +71,9 @@ Creates new musics
 }
 ```
 
-### GET /musics
+### GET /musics/1
 
-Returns all user bookmarks
+Returns music by id
 
 ##### Example Response: 
 ```
@@ -89,7 +89,7 @@ Returns all user bookmarks
 
 ### DELETE /musics
 
-Deletes bookmark by ID:
+Deletes music by ID:
 
 ##### Example Input: 
 ```
