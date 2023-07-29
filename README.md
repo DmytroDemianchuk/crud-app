@@ -7,25 +7,11 @@
 - Working with the database using the sqlx library.
 - Writing SQL queries.
 
-### To start application
+## Requirements
+- go 1.20
+- docker & docker-compose
 
-Download github repository in your desktop
-
-```
-https://github.com/DmytroDemianchuk/crud-app.git
-```
-
-Download docker image from the internet
-
-```
-docker pull postgres
-```
-
-Create docker container
-
-```
-docker run --name=crud-app -e POSTGRES_PASSWORD='qwerty' -p 5436:5432 -d --rm postgres
-```
+## Run Project
 
 Definition migrating to database
 
@@ -33,13 +19,48 @@ Definition migrating to database
 migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5436/postgres?sslmode=disable' up
 ```
 
-Start application
+Use `make run` to build&run project
 
+
+## API:
+### POST /auth/sign-up
+
+Creates new user 
+
+##### Example Input: 
 ```
-source .env && go build -o app cmd/main.go && ./app
+{
+	"name": "user",
+	"email": "user@user.com",
+    "password": "password"
+} 
 ```
-### API
-## Example of creating a music
+
+
+### POST /auth/sign-in
+
+Request to get JWT Token based on user credentials
+
+##### Example Input: 
+```
+{
+	"email": "user@user.com",
+    "password": "password"
+} 
+```
+
+##### Example Response: 
+```
+{
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzEwMzgyMjQuNzQ0MzI0MiwidXNlciI6eyJJRCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsIlVzZXJuYW1lIjoiemhhc2hrZXZ5Y2giLCJQYXNzd29yZCI6IjQyODYwMTc5ZmFiMTQ2YzZiZDAyNjlkMDViZTM0ZWNmYmY5Zjk3YjUifX0.3dsyKJQ-HZJxdvBMui0Mzgw6yb6If9aB8imGhxMOjsk"
+} 
+```
+
+### POST /musics
+
+Creates new musics
+
+##### Example Input: 
 ```
 {
     "name": "Good Morning",  
@@ -48,4 +69,31 @@ source .env && go build -o app cmd/main.go && ./app
     "genre": "Hip hop",
     "released_year": 2007
 }
+```
+
+### GET /musics
+
+Returns all user bookmarks
+
+##### Example Response: 
+```
+{
+    "name": "Good Morning",  
+    "artist": "Kanye West",  
+    "album": "Graduation",  
+    "genre": "Hip hop",
+    "released_year": 2007
+} 
+```
+
+
+### DELETE /musics
+
+Deletes bookmark by ID:
+
+##### Example Input: 
+```
+{
+	"id": "1"
+} 
 ```
