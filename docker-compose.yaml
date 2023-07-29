@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  app:
+    build: ./
+    command: ./app
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    volumes:
+      - ./.bin/:/root/
+      - ./configs/:/root/configs/
+    env_file:
+      - .env
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5436:5432
