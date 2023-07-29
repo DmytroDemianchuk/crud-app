@@ -99,7 +99,7 @@ func (m *Musics) Update(ctx context.Context, id int64, inp domain.UpdateMusicInp
 
 	// updating element of released_year
 	if inp.ReleasedYear != nil {
-		setValues = append(setValues, fmt.Sprintf("genre=$%d", argId))
+		setValues = append(setValues, fmt.Sprintf("released_year=$%d", argId))
 		args = append(args, *inp.ReleasedYear)
 		argId++
 	}

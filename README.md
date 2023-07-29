@@ -2,7 +2,7 @@
 ## I used the following concepts during development:
 - Building a Web Application with Go, following the REST API design.
 - The Clean Architecture approach in building the structure of an application. Dependency injection technique.
-- Working with the <a href="https://github.com/gorilla/mux">gorilla/mux</a>.framework.
+- Working with the <a href="https://github.com/gorilla/mux">gorilla/mux</a> framework.
 - Working with Postgres database. Run from Docker. Generation of migration files.
 - Working with the database using the sqlx library.
 - Writing SQL queries.
@@ -21,30 +21,34 @@ migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5436/post
 
 Use `make run` to build&run project
 
+```
+make run
+```
+
 
 ## API:
-### POST /auth/sign-up
+### POST localhost:8080/auth/sign-up
 
 Creates new user 
 
 ##### Example Input: 
 ```
 {
-	"name": "user",
-	"email": "user@user.com",
+    "name": "user",	
+    "email": "user@user.com",
     "password": "password"
 } 
 ```
 
 
-### POST /auth/sign-in
+### POST localhost:8080/auth/sign-in
 
 Request to get JWT Token based on user credentials
 
 ##### Example Input: 
 ```
 {
-	"email": "user@user.com",
+    "email": "user@user.com",
     "password": "password"
 } 
 ```
@@ -56,7 +60,7 @@ Request to get JWT Token based on user credentials
 } 
 ```
 
-### POST /musics
+### POST localhost:8080/musics
 
 Creates new musics
 
@@ -71,7 +75,7 @@ Creates new musics
 }
 ```
 
-### GET /musics/1
+### GET localhost:8080/musics/1
 
 Returns music by id
 
@@ -86,8 +90,48 @@ Returns music by id
 } 
 ```
 
+### GET localhost:8080/musics
 
-### DELETE /musics
+Returns all musics
+
+##### Example Response: 
+```
+[
+    {
+        "id": 1,
+        "name": "Good Morning",
+        "artist": "Kanye West",
+        "album": "Graduation",
+        "genre": "Hip hop",
+        "released_year": 2007
+    },
+    {
+        "id": 2,
+        "name": "Not Afraid",
+        "artist": "Eminem",
+        "album": "Recovery",
+        "genre": "Hip hop",
+        "released_year": 2010
+    }
+]
+```
+
+### PUT localhost:8080/musics/1
+
+Update music by id
+
+##### Example Input: 
+```
+{
+    "name": "Good Morning",  
+    "artist": "Kanye West",  
+    "album": "Graduation",  
+    "genre": "Hip hop, rap",
+    "released_year": 2010
+}
+```
+
+### DELETE localhost:8080/musics/1
 
 Deletes music by ID:
 
